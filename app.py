@@ -42,7 +42,7 @@ class Venue(db.Model):
     image_link = db.Column(db.String(300))
     facebook_link = db.Column(db.String(120))
     website_link = db.Column(db.String(120), default=None)
-    seeking_talent = db.Column(db.String, default=False)
+    seeking_talent = db.Column(db.Boolean(), default=False)
     seeking_description = db.Column(db.String(), default=None)
 
 
