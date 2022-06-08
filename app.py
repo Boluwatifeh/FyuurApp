@@ -36,13 +36,17 @@ class Venue(db.Model):
     state = db.Column(db.String(120))
     address = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
+    genres = db.Column(db.String(120))
+    image_link = db.Column(db.String(300))
     facebook_link = db.Column(db.String(120))
+    website_link = db.Column(db.String(120), default=None)
+    seeking_talent = db.Column(db.String, default=False)
+    seeking_description = db.Column(db.String(), default=None)
+
 
     def __repr__(self) -> str:
         return f'<Venue {self.id} {self.name}>'
         
-db.create_all()
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
@@ -55,8 +59,13 @@ class Artist(db.Model):
     state = db.Column(db.String(120))
     phone = db.Column(db.String(120))
     genres = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
+    image_link = db.Column(db.String(300))
     facebook_link = db.Column(db.String(120))
+    website_link = db.Column(db.String(120), default=None)
+    seeking_venue = db.Column(db.String())
+    seeking_description = db.Column(db.String())
+
+db.create_all()
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
