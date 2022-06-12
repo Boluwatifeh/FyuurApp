@@ -16,7 +16,7 @@ class ShowForm(Form):
         default= datetime.today()
     )
 
-class VenueForm(FlaskForm):
+class VenueForm(Form):
     name = StringField(
         'name', validators=[DataRequired()]
     )
@@ -128,7 +128,7 @@ class VenueForm(FlaskForm):
 
 
 
-class ArtistForm(FlaskForm):
+class ArtistForm(Form):
     name = StringField(
         'name', validators=[DataRequired()]
     )

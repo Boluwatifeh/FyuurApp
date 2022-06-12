@@ -2,6 +2,7 @@
 # Imports
 #----------------------------------------------------------------------------#
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 db = SQLAlchemy()
 
 
@@ -25,6 +26,7 @@ class Venue(db.Model):
     seeking_description = db.Column(db.String(), default=None)
     area = db.Column(db.Integer, db.ForeignKey('Area.id'), nullable=False)
     shows = db.relationship('Show', backref='venue', lazy=True)
+    date_created = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
 
     def __repr__(self) -> str:
         return f'<Venue {self.id} {self.name}>'
@@ -44,6 +46,7 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.String())
     seeking_description = db.Column(db.String())
     shows = db.relationship('Show', backref='artist', lazy=True)
+    date_created = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
 
 
 class Area(db.Model):
