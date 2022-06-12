@@ -85,7 +85,9 @@ def show_venue(venue_id):
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
   data = Venue.query.get(venue_id)
-  return render_template('pages/show_venue.html', venue=data)
+  upcoming_shows = Show.query.join(Venue).filter(Venue.id == venue_id).filter(Show.start_time > datetime.utcnow())
+  past_shows = Show.query.join(Venue).filter(Venue.id == venue_id).filter(Show.start_time <= datetime.utcnow())
+  return render_template('pages/show_venue.html', venue=data,upcoming_shows=upcoming_shows, past_shows=past_shows)
 
 #  Create Venue
 #  ----------------------------------------------------------------
@@ -310,8 +312,7 @@ def create_show_submission():
   venue_id = request.form.get('venue_id')
   artist = Artist.query.get(artist_id)
   venue_name = Venue.query.get(venue_id).name
-  show = Show(artist_id=artist.id, artist_image_link=artist.image_link,venue_id=venue_id, start_time=form.start_time.data,
-                artist_name=artist.name, venue_name=venue_name)
+  show = Show(artist_id=artist.id,venue_id=venue_id, start_time=form.start_time.data)
   db.session.add(show)
   db.session.commit()
 
