@@ -14,7 +14,7 @@ from logging import Formatter, FileHandler
 from flask_wtf import Form
 import sqlalchemy
 from forms import *
-from models import Shows, Artist, Area, Venue
+from models import Show, Artist, Area, Venue
 from models import db
 #----------------------------------------------------------------------------#
 # App Config. 
@@ -24,27 +24,14 @@ app = Flask(__name__)
 db.init_app(app)
 moment = Moment(app)
 app.config.from_object('config')
-#db = sqlalchemy(app)
 migrate = Migrate(app, db)
 
 
 # TODO: connect to a local postgresql database
-
-#----------------------------------------------------------------------------#
-# Models.
-#----------------------------------------------------------------------------#
-
-
         
+# TODO: implement any missing fields, as a database migration using Flask-Migrate
 
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
-
-
-
-
-#db.create_all()
-
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
+# TODO: implement any missing fields, as a database migration using Flask-Migrate
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 
@@ -113,7 +100,6 @@ def create_venue_submission():
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
   retrieve_data = request.form.get 
-  form = VenueForm()
   area = Area.query.filter_by(city=retrieve_data('city'), state=retrieve_data('state')).first()
 
   if not area:
@@ -145,6 +131,7 @@ def delete_venue(venue_id):
   # TODO: Complete this endpoint for taking a venue_id, and using
   # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
   
+  '''
   venue = Venue.query.get(venue_id)
   try:
       venue.delete()
@@ -155,6 +142,7 @@ def delete_venue(venue_id):
       db.session.rollback()
       flash(f'Venue {venue.name} could not be deleted')
       return redirect(url_for('index'))
+  '''
   # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
   # clicking that button delete it from the db then redirect the user to the homepage
   #return None
@@ -304,43 +292,7 @@ def create_artist_submission():
 def shows():
   # displays list of shows at /shows
   # TODO: replace with real venues data.
-  data=[{
-    "venue_id": 1,
-    "venue_name": "The Musical Hop",
-    "artist_id": 4,
-    "artist_name": "Guns N Petals",
-    "artist_image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
-    "start_time": "2019-05-21T21:30:00.000Z"
-  }, {
-    "venue_id": 3,
-    "venue_name": "Park Square Live Music & Coffee",
-    "artist_id": 5,
-    "artist_name": "Matt Quevedo",
-    "artist_image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80",
-    "start_time": "2019-06-15T23:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "venue_name": "Park Square Live Music & Coffee",
-    "artist_id": 6,
-    "artist_name": "The Wild Sax Band",
-    "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-    "start_time": "2035-04-01T20:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "venue_name": "Park Square Live Music & Coffee",
-    "artist_id": 6,
-    "artist_name": "The Wild Sax Band",
-    "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-    "start_time": "2035-04-08T20:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "venue_name": "Park Square Live Music & Coffee",
-    "artist_id": 6,
-    "artist_name": "The Wild Sax Band",
-    "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-    "start_time": "2035-04-15T20:00:00.000Z"
-  }]
-  data = Shows.query.all()
+  data = Show.query.all()
   return render_template('pages/shows.html', shows=data)
 
 @app.route('/shows/create')
@@ -358,7 +310,7 @@ def create_show_submission():
   venue_id = request.form.get('venue_id')
   artist = Artist.query.get(artist_id)
   venue_name = Venue.query.get(venue_id).name
-  show = Shows(artist_id=artist.id, artist_image_link=artist.image_link,venue_id=venue_id, start_time=form.start_time.data,
+  show = Show(artist_id=artist.id, artist_image_link=artist.image_link,venue_id=venue_id, start_time=form.start_time.data,
                 artist_name=artist.name, venue_name=venue_name)
   db.session.add(show)
   db.session.commit()
