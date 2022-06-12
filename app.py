@@ -7,22 +7,26 @@ import json
 import dateutil.parser
 import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for
+import logging
 from flask_moment import Moment
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
+import sqlalchemy
 from forms import *
+from models import Shows, Artist, Area, Venue
+from models import db
 #----------------------------------------------------------------------------#
-# App Config.
+# App Config. 
 #----------------------------------------------------------------------------#
 
 app = Flask(__name__)
+db.init_app(app)
 moment = Moment(app)
 app.config.from_object('config')
-db = SQLAlchemy(app)
+#db = sqlalchemy(app)
 migrate = Migrate(app, db)
+
 
 # TODO: connect to a local postgresql database
 
@@ -30,67 +34,13 @@ migrate = Migrate(app, db)
 # Models.
 #----------------------------------------------------------------------------#
 
-class Venue(db.Model):
-    __tablename__ = 'Venue'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    image_link = db.Column(db.String(300))
-    facebook_link = db.Column(db.String(120))
-    website_link = db.Column(db.String(120), default=None)
-    seeking_talent = db.Column(db.Boolean(), default=False)
-    seeking_description = db.Column(db.String(), default=None)
-    area = db.Column(db.Integer, db.ForeignKey('Area.id'), nullable=False)
-    shows = db.relationship('Shows', backref='venue', lazy=True)
-
-
-
-
-    def __repr__(self) -> str:
-        return f'<Venue {self.id} {self.name}>'
         
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
-class Artist(db.Model):
-    __tablename__ = 'Artist'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    image_link = db.Column(db.String(300))
-    facebook_link = db.Column(db.String(120))
-    website_link = db.Column(db.String(120), default=None)
-    seeking_venue = db.Column(db.String())
-    seeking_description = db.Column(db.String())
-    shows = db.relationship('Shows', backref='artist', lazy=True)
 
 
-class Area(db.Model):
-    __tablename__ = 'Area'
-    id = db.Column(db.Integer, primary_key=True)
-    city = db.Column(db.String(50))
-    state = db.Column(db.String(30))
-    venues = db.relationship('Venue', backref='Area', lazy=True)
-
-
-class Shows(db.Model):
-    __tablename__ = 'Shows'
-    id = db.Column(db.Integer, primary_key=True)
-    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)
-    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
-    start_time = db.Column(db.String(50), nullable=False)
-    artist_name = db.Column(db.String(120))
-    artist_image_link = db.Column(db.String(300))
-    venue_name = db.Column(db.String(50))
 
 #db.create_all()
 
